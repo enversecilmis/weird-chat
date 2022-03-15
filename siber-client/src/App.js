@@ -1,8 +1,9 @@
+import colors from "./utils/Colors";
 
 function App() {
   return (
     <div className="App">
-      helo
+      <text style={{color: colors.dark}}>helo</text>
     </div>
   );
 }

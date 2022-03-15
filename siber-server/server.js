@@ -7,8 +7,6 @@ const io = require('socket.io')(http, {
 
 io.on('connection', (socket) => {
     console.log(socket.id + " connected");
-    console.log("asdasd");
-
 })
 
 http.listen(3001, () => console.log("listening on 3001"))
