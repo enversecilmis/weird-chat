@@ -13,6 +13,7 @@ const Home = ({}) => {
 
     const [name, setName] = useState('')
     const [users, setUsers] = useState({})
+    const [selectedUser, setSelectedUser] = useState()
     const { state } = useLocation()
     const socket = useSocket()
 
@@ -37,7 +38,7 @@ const Home = ({}) => {
             </div>
             
 
-            <UserList users={users} />
+            <UserList users={users} select={setSelectedUser} selected={selectedUser} />
         </div>
     )
 }

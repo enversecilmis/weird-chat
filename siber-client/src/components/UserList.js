@@ -4,17 +4,23 @@ import { createUseStyles } from 'react-jss'
 
 
 
-const UserList = ({ users }) => {
+const UserList = ({ users, select, selected }) => {
     const classes = useStyles()
 
 
     const userCards = []
-    for (let user in users)
+    for (let user in users){
+        const isSelected = user == selected
         userCards.push(
-            <div key={user}>
+            <div
+                key={user}
+                onClick={() => { select(user) }}
+                style={{backgroundColor: isSelected? '#444':''}}
+            >
                 { users[user] }
             </div>
         )
+    }
 
 
     return (
@@ -59,6 +65,7 @@ const useStyles = createUseStyles({
             width: '90%',
             textAlign: 'center',
             fontSize: 30,
+            cursor: 'pointer',
 
 
             boxShadow:{
@@ -68,8 +75,14 @@ const useStyles = createUseStyles({
                 blur:20,
                 color: '#222'
             },
-        }
 
+            '&:hover': {
+                backgroundColor: '#333',
+            }
+        }
+    },
+    selected: {
+        backgroundColor: '#999'
     }
 })
 
