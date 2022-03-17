@@ -14,7 +14,7 @@ const UserList = ({ users, select, selected }) => {
         userCards.push(
             <div
                 key={user}
-                onClick={() => { select(user) }}
+                onClick={() => { select( user === selected? null : user ) }}
                 style={{backgroundColor: isSelected? '#444':''}}
             >
                 { users[user] }
@@ -50,9 +50,9 @@ const useStyles = createUseStyles({
         boxShadow:{
             x:0,
             y:0,
-            spread:20,
+            spread:10,
             blur:10,
-            color: '#222'
+            color: '#262626'
         },
         '& h1': {
             textAlign: 'center',
@@ -73,7 +73,7 @@ const useStyles = createUseStyles({
                 y:0,
                 spread:5,
                 blur:20,
-                color: '#222'
+                color: '#242424'
             },
 
             '&:hover': {

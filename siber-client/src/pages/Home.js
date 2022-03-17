@@ -4,6 +4,7 @@ import { createUseStyles } from 'react-jss'
 
 import useSocket from '../client'
 import UserList from '../components/UserList'
+import Messages from '../components/Messages'
 
 
 
@@ -14,6 +15,9 @@ const Home = ({}) => {
     const [name, setName] = useState('')
     const [users, setUsers] = useState({})
     const [selectedUser, setSelectedUser] = useState()
+    const [messages, setMessages] = useState({})
+
+
     const { state } = useLocation()
     const socket = useSocket()
 
@@ -27,6 +31,17 @@ const Home = ({}) => {
             delete users[socket.id]
             setUsers(users)
         })
+        socket.on('message', msgPack => {
+            setMessages(prev => {
+                
+            })
+        })
+        
+        const msgPack = {
+            uid: 111,
+            msg: "mesaaj",
+            isImage: false,
+        }
 
     }, [])
     
@@ -37,7 +52,7 @@ const Home = ({}) => {
                 <h1 className={classes.name}>{ name }</h1>
             </div>
             
-
+            <Messages selected={selectedUser} />
             <UserList users={users} select={setSelectedUser} selected={selectedUser} />
         </div>
     )
