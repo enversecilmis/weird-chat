@@ -5,7 +5,7 @@ const colors = {
     darklighterlighterlighter: '#6d6e6f',
     light: '#ddd',
     red: '#eb3d34',
-    green: '#1d7327',
+    green: '#3fab4b',
     greenellow: '#8feb34',
 }
 export default colors

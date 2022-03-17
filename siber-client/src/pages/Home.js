@@ -1,13 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { createUseStyles } from 'react-jss'
-import { MdLinearScale, MdSend } from 'react-icons/md'
 
 import useSocket from '../client'
 import UserList from '../components/UserList'
 import Messages from '../components/Messages'
 import colors from '../utils/Colors'
-import { ThemeContext } from 'theming'
 
 
 
@@ -19,7 +17,6 @@ const Home = ({}) => {
     const [users, setUsers] = useState({})
     const [selectedUser, setSelectedUser] = useState()
     const [messages, setMessages] = useState({})
-    const [textMessage, setTextMessage] = useState('')
 
 
     const { state } = useLocation()
@@ -56,6 +53,7 @@ const Home = ({}) => {
         // }
 
     }, [])
+
     
     
     return (
@@ -63,19 +61,9 @@ const Home = ({}) => {
             <div>
                 <h1 className={classes.name}>{ name }</h1>
             </div>
-            <div className={classes.messagesSection}>
-                <Messages users={users} selected={selectedUser} messages={messages} />
-                <div className='messageBox'>
-                    <input
-                        value={ textMessage }
-                        onChange={ (e) => setTextMessage(e.target.value) }
-                        placeholder={ 'mesaj...' }
-                    />
-                    <MdSend className='sendIcon' style={{
-                        color: textMessage? colors.green : colors.darklighterlighterlighter,
-                    }}/>
-                </div>
-            </div>
+
+            <Messages users={users} selected={selectedUser} messages={messages} />
+            
             <UserList users={users} select={setSelectedUser} selected={selectedUser} />
         </div>
     )
@@ -123,10 +111,10 @@ const useStyles = createUseStyles({
                 }
             },
             '& .sendIcon': {
-                fontSize: 20,
+                fontSize: 22,
                 position: 'absolute',
                 right: 5,
-                top: '15%',
+                top: '10%',
                 transition: 'color 250ms linear',
             }
         },
