@@ -1,49 +1,41 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import { createUseStyles } from 'react-jss'
-
-import {  MdSend } from 'react-icons/md'
-import colors from '../utils/Colors'
+import TextInput from './TextInput'
 
 
 
-const Messages = ({ users, selected, messages }) => {
+
+const Messages = ({ user, messages, selected }) => {
     const classes = useStyles()
-    const [textMessage, setTextMessage] = useState('')
+
+
+    useEffect(() => {
+        console.log(messages);
+
+    })
 
 
     return (
         <div className={classes.container}>
             <h1>Mesajlar</h1>
 
-            {selected &&
+            {user &&
             <div className={classes.messageSection}>
 
                 <div className={classes.messagesContainer}>
-                    {messages[selected]?.map(( { uid, msg, isImg }, index ) => 
+                    {messages && messages.map(( { id, msg, isImg }, index ) => 
                         isImg?
-                        <div className={classes.imgMessage}>
+                        <div key={index} className={classes.imgMessage}>
                             Image
                         </div>
                         :
-                        <div className={classes.textMessage}>
+                        <div key={index} className={classes.textMessage}>
                             {msg}
                         </div>
                     )
-                    ||
-                    <p>Henüz Mesaj Yok</p>
                     }
                 </div>
-
-                <div className='sendTextBox'>
-                    <input
-                        value={ textMessage }
-                        onChange={ (e) => setTextMessage(e.target.value) }
-                        placeholder={ 'mesaj...' }
-                    />
-                    <MdSend className='sendIcon' style={{
-                        color: textMessage? colors.green : colors.darklighterlighterlighter,
-                    }}/>
-                </div>
+                <TextInput selected={ selected } />
             </div>
 
             }
@@ -57,45 +49,24 @@ const Messages = ({ users, selected, messages }) => {
 
 const useStyles = createUseStyles({
     container:{
-        backgroundColor: 'red',
         '& h1': {
             textAlign: 'center',
             fontSize: 40,
         },
+        display: 'flex',
+        flexDirection: 'column',
     },
     messageSection: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
+        flex: 1,
 
-        '& .sendTextBox': {
-            marginBottom: 20,
-            position: 'relative',
-
-            '& input': {
-                border: 'none',
-                borderRadius: 11,
-                padding: [0,30,4,10],
-                
-                fontSize: 18,
-                color: colors.darklighter,
-
-
-                '&:focus': {
-                    outline:'none',
-                }
-            },
-            '& .sendIcon': {
-                fontSize: 22,
-                position: 'absolute',
-                right: 5,
-                top: '10%',
-                transition: 'color 250ms linear',
-            }
-        },
     },
     messagesContainer: {
-
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
         
     },
     textMessage: {
