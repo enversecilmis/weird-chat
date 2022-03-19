@@ -13,9 +13,15 @@ io.on('connection', (socket) => {
         io.emit('users', users)
     })
 
+
     socket.on('disconnect', () => {        
         delete users[socket.id]
         io.emit('users', users)
+    })
+
+
+    socket.on('message', ({ id, msg, isImg }) => {
+        io.to(id).emit('message', { id: socket.id, msg, isImg})
     })
 })
 

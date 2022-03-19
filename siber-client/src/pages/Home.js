@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { createUseStyles } from 'react-jss'
 
@@ -10,7 +10,7 @@ import colors from '../utils/Colors'
 
 
 
-const Home = ({}) => {
+const Home = () => {
     const classes = useStyles()
 
     const [name, setName] = useState('')
@@ -32,26 +32,31 @@ const Home = ({}) => {
             delete users[socket.id]
             setUsers(users)
         })
-        socket.on('message', ({ uid, msg, isImg }) => {
+        socket.on('message', ({ id, msg, isImg }) => {
             setMessages(prev => {
-                prev[uid].push({ uid, msg, isImg })
+                if(prev[id] === undefined)
+                    prev[id] = []
+
+                prev[id].push({ id, msg, isImg })
+                return {...prev}
             })
         })
 
 
+
         // const msgs = {
         //     asSasdzZXadg: [
-        //         { uid: "asSasdzZXadg", msg: "asdsad", isImage: false },
-        //         { uid: "FGsdfXCaaadf", msg: "base64:/asdimage", isImage: true },
-        //         { uid: "asSasdzZXadg", msg: "asdsad", isImage: false },
+        //         { id: "asSasdzZXadg", msg: "asdsad", isImage: false },
+        //         { id: "FGsdfXCaaadf", msg: "base64:/asdimage", isImage: true },
+        //         { id: "asSasdzZXadg", msg: "asdsad", isImage: false },
         //     ],
         //     ZxAsdQWEsv: [
-        //         { uid: "ZxAsdQWEsv", msg: "asdsad", isImage: false },
-        //         { uid: "ZxAsdQWEsv", msg: "base64:/asdimage", isImage: true },
-        //         { uid: "FGsdfXCaaa", msg: "asdsad", isImage: false },
+        //         { id: "ZxAsdQWEsv", msg: "asdsad", isImage: false },
+        //         { id: "ZxAsdQWEsv", msg: "base64:/asdimage", isImage: true },
+        //         { id: "FGsdfXCaaa", msg: "asdsad", isImage: false },
         //     ]
         // }
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     
@@ -62,7 +67,11 @@ const Home = ({}) => {
                 <h1 className={classes.name}>{ name }</h1>
             </div>
 
-            <Messages users={users} selected={selectedUser} messages={messages} />
+            <Messages
+                selected={ selectedUser }
+                user={ users[selectedUser] }
+                messages={ messages[selectedUser] }
+            />
             
             <UserList users={users} select={setSelectedUser} selected={selectedUser} />
         </div>
