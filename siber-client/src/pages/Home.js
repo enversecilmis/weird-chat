@@ -6,6 +6,7 @@ import useSocket from '../client'
 import UserList from '../components/UserList'
 import Messages from '../components/Messages'
 import colors from '../utils/Colors'
+import TextInput from '../components/TextInput'
 
 
 
@@ -17,6 +18,7 @@ const Home = () => {
     const [users, setUsers] = useState({})
     const [selectedUser, setSelectedUser] = useState()
     const [messages, setMessages] = useState({})
+    const [textMessage, setTextMessage] = useState('')
 
 
     const { state } = useLocation()
@@ -59,7 +61,11 @@ const Home = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    
+    const sendTextMessage = (e) => {
+        e.preventDefault()
+        textMessage && socket.emit('message', { id: socket.id, msg: textMessage, isImg: false })
+        setTextMessage('')
+    }
     
     return (
         <div className={classes.container}>
@@ -67,11 +73,24 @@ const Home = () => {
                 <h1 className={classes.name}>{ name }</h1>
             </div>
 
-            <Messages
-                selected={ selectedUser }
-                user={ users[selectedUser] }
-                messages={ messages[selectedUser] }
-            />
+            <div className={classes.messagesSection}>
+                <h1>Mesajlar</h1>
+                {
+
+                selectedUser &&
+                <>
+                <Messages
+                    user={ users[selectedUser] }
+                    messages={ messages[selectedUser] }
+                />
+                <TextInput
+                    placeholder='Mesaj...'
+                    text={textMessage}
+                    setText={setTextMessage}
+                    submit={sendTextMessage}
+                />
+                </>
+            }</div>
             
             <UserList users={users} select={setSelectedUser} selected={selectedUser} />
         </div>
@@ -92,41 +111,15 @@ const useStyles = createUseStyles({
         height: '100%',
 
     },
+
+    messagesSection: {
+        '& h1': {
+            textAlign: 'center',
+            fontSize: 40,
+        },
+    },
     name: {
         fontSize: 40,
-    },
-    messagesSection: {
-
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-
-
-        '& .messageBox': {
-            marginBottom: 20,
-            position: 'relative',
-
-            '& input': {
-                border: 'none',
-                borderRadius: 11,
-                padding: [0,30,4,10],
-                
-                fontSize: 18,
-                color: colors.darklighter,
-
-
-                '&:focus': {
-                    outline:'none',
-                }
-            },
-            '& .sendIcon': {
-                fontSize: 22,
-                position: 'absolute',
-                right: 5,
-                top: '10%',
-                transition: 'color 250ms linear',
-            }
-        },
     },
     
 })

@@ -5,7 +5,7 @@ import TextInput from './TextInput'
 
 
 
-const Messages = ({ user, messages, selected }) => {
+const Messages = ({ user, messages }) => {
     const classes = useStyles()
 
 
@@ -17,25 +17,20 @@ const Messages = ({ user, messages, selected }) => {
 
     return (
         <div className={classes.container}>
-            <h1>Mesajlar</h1>
 
             {user &&
-            <div className={classes.messageSection}>
-
-                <div className={classes.messagesContainer}>
-                    {messages && messages.map(( { id, msg, isImg }, index ) => 
-                        isImg?
-                        <div key={index} className={classes.imgMessage}>
-                            Image
-                        </div>
-                        :
-                        <div key={index} className={classes.textMessage}>
-                            {msg}
-                        </div>
-                    )
-                    }
-                </div>
-                <TextInput selected={ selected } />
+            <div className={classes.messagesContainer}>
+                {messages && messages.map(( { id, msg, isImg }, index ) => 
+                    isImg?
+                    <div key={index} className={classes.imgMessage}>
+                        Image
+                    </div>
+                    :
+                    <div key={index} className={classes.textMessage}>
+                        {msg}
+                    </div>
+                )
+                }
             </div>
 
             }
@@ -49,19 +44,8 @@ const Messages = ({ user, messages, selected }) => {
 
 const useStyles = createUseStyles({
     container:{
-        '& h1': {
-            textAlign: 'center',
-            fontSize: 40,
-        },
         display: 'flex',
         flexDirection: 'column',
-    },
-    messageSection: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        flex: 1,
-
     },
     messagesContainer: {
         display: 'flex',
