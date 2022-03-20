@@ -25,7 +25,7 @@ const TextMessage = ({ msg, className }) => {
 const useStyles = createUseStyles({
     container:{
         backgroundColor: colors.green,
-        borderRadius: 12,
+        borderRadius: 10,
         padding:5,
     },
 })

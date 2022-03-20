@@ -79,10 +79,7 @@ const Home = () => {
     
     return (
         <div className={classes.container}>
-            <div>
-                <h1 className={classes.name}>{ name }</h1>
-            </div>
-
+            <UserList users={users} select={setSelectedUID} selected={selectedUID} />
             <div className={classes.messagesSection}>
                 <h1>Mesajlar</h1>
                 {
@@ -100,8 +97,12 @@ const Home = () => {
                 />
                 </>
             }</div>
+            <div>
+                <h1 className={classes.name}>{ name }</h1>
+
+            </div>
+
             
-            <UserList users={users} select={setSelectedUID} selected={selectedUID} />
         </div>
     )
 }

@@ -50,8 +50,8 @@ const useStyles = createUseStyles({
         '& .sendIcon': {
             fontSize: 22,
             position: 'absolute',
-            right: '0%',
-            top: '10%',
+            right: '1%',
+            top: '9%',
             transition: 'color 250ms linear',
             cursor: 'pointer',
         }

@@ -42,15 +42,15 @@ const useStyles = createUseStyles({
         width: 280,
 
         '& .sender': {
-            alignSelf: 'end',
-            borderRadius: [10,0,10,10],
+            alignSelf: 'start',
+            borderRadius: [0,10,10,10],
             backgroundColor: colors.receivedMessageBG,
             marginBottom: 5,
             maxWidth: '70%',
         },
         '& .self': {
-            alignSelf: 'start',
-            borderRadius: [0,10,10,10],
+            alignSelf: 'end',
+            borderRadius: [10,0,10,10],
             backgroundColor: colors.sentMessageBG,
             marginBottom: 5,
             maxWidth: '70%',
