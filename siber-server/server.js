@@ -20,8 +20,9 @@ io.on('connection', (socket) => {
     })
 
 
-    socket.on('message', ({ id, msg, isImg }) => {
-        io.to(id).emit('message', { id: socket.id, msg, isImg})
+    socket.on('sendMessage', ({ id, msg, isImg }) => {
+        io.to(id).emit('message', { id: socket.id, msg: msg, isImg: isImg})
+        console.log(`sendin message ${msg}`);
     })
 })
 

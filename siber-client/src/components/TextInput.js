@@ -12,13 +12,19 @@ const TextInput = ({ text, setText, submit, placeholder }) => {
 
 
     return (
-        <form onSubmit={submit} className={classes.container}>
+        <form onSubmit={(e) => {
+            console.log('====================================');
+            console.log("heyooo ");
+            console.log('====================================');
+            console.log(text);
+            submit(e)
+        }} className={classes.container}>
             <input
                 value={ text }
                 onChange={ (e) => setText(e.target.value) }
                 placeholder={ placeholder }
             />
-            <MdSend onClick={submit} className='sendIcon' style={{
+            <MdSend className='sendIcon' style={{
                 color: text? colors.green : colors.darklighterlighterlighter,
             }}/>
         </form>

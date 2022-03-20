@@ -5,7 +5,6 @@ import { createUseStyles } from 'react-jss'
 import useSocket from '../client'
 import UserList from '../components/UserList'
 import Messages from '../components/Messages'
-import colors from '../utils/Colors'
 import TextInput from '../components/TextInput'
 
 
@@ -16,8 +15,8 @@ const Home = () => {
 
     const [name, setName] = useState('')
     const [users, setUsers] = useState({})
-    const [selectedUser, setSelectedUser] = useState()
-    const [messages, setMessages] = useState({})
+    const [selectedUID, setSelectedUID] = useState()
+    const [messagePacks, setMessagePacks] = useState({})
     const [textMessage, setTextMessage] = useState('')
 
 
@@ -30,16 +29,19 @@ const Home = () => {
         setName( userName )
 
         socket.emit( 'login', userName )
+
         socket.on('users', users => {
             delete users[socket.id]
             setUsers(users)
         })
-        socket.on('message', ({ id, msg, isImg }) => {
-            setMessages(prev => {
-                if(prev[id] === undefined)
-                    prev[id] = []
 
-                prev[id].push({ id, msg, isImg })
+        socket.on('message', ({ id, msg, isImg }) => {
+            console.log("received message");
+            setMessagePacks(prev => {
+                console.log(prev[id]);
+                (prev[id] === undefined) && (prev[id] = [])
+                prev[id].push({ id: id, msg: msg, isImg: isImg })
+                console.log(prev[id]);
                 return {...prev}
             })
         })
@@ -58,12 +60,23 @@ const Home = () => {
         //         { id: "FGsdfXCaaa", msg: "asdsad", isImage: false },
         //     ]
         // }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [socket, state])
 
     const sendTextMessage = (e) => {
         e.preventDefault()
-        textMessage && socket.emit('message', { id: socket.id, msg: textMessage, isImg: false })
+
+        console.log("Sending message");
+        textMessage &&
+            socket.emit('sendMessage', { id: selectedUID, msg: textMessage, isImg: false })
+
+        setMessagePacks(prev => {
+            console.log(prev[selectedUID]);
+            (prev[selectedUID] === undefined) && (prev[selectedUID] = [])
+            prev[selectedUID].push({ id: socket.id, msg: textMessage, isImg: false })
+            console.log(prev[selectedUID]);
+            return {...prev}
+        })
+
         setTextMessage('')
     }
     
@@ -76,23 +89,29 @@ const Home = () => {
             <div className={classes.messagesSection}>
                 <h1>Mesajlar</h1>
                 {
-
-                selectedUser &&
+                selectedUID &&
                 <>
-                <Messages
-                    user={ users[selectedUser] }
-                    messages={ messages[selectedUser] }
-                />
-                <TextInput
+                {console.log(messagePacks[selectedUID])}
+                {/* <Messages
+                    user={ users[selectedUID] }
+                    messages={ messagePacks[selectedUID] }
+                /> */}
+                {/* <TextInput
                     placeholder='Mesaj...'
                     text={textMessage}
                     setText={setTextMessage}
                     submit={sendTextMessage}
-                />
+                /> */}
+                <form onSubmit={sendTextMessage}>
+                    <input
+                    value={ textMessage }
+                    onChange={ (e) => setTextMessage(e.target.value) }
+                    />
+                </form>
                 </>
             }</div>
             
-            <UserList users={users} select={setSelectedUser} selected={selectedUser} />
+            <UserList users={users} select={setSelectedUID} selected={selectedUID} />
         </div>
     )
 }
@@ -109,10 +128,13 @@ const useStyles = createUseStyles({
         justifyContent: 'space-between',
 
         height: '100%',
-
     },
 
     messagesSection: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+
         '& h1': {
             textAlign: 'center',
             fontSize: 40,
