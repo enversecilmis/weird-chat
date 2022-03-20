@@ -1,31 +1,30 @@
 import React from 'react'
 import { createUseStyles } from 'react-jss'
+import colors from '../utils/Colors'
+import ImageMessage from './ImageMessage'
+import TextMessage from './TextMessage'
 
 
 
 
-const Messages = ({ user, messages }) => {
+const Messages = ({ selfId, messages }) => {
     const classes = useStyles()
 
 
     return (
         <div className={classes.container}>
-            <div className={classes.messagesContainer}>
-                {(messages && messages.map(( { id, msg, isImg }, index ) => 
-                    isImg?
-                    <div key={index} className={classes.imgMessage}>
-                        Image
-                    </div>
-                    :
-                    <div key={index} className={classes.textMessage}>
-                        {msg}
-                    </div>
-                ))
-                ||
-                <i>Henüz mesaj yok</i>
-                
-                }
-            </div>
+
+        {(messages &&
+        messages.map(( { id, msg, isImg }, index ) => 
+            isImg?
+            <ImageMessage key={ index } className={selfId===id? 'self' : 'sender'} msg={ msg } />
+            :
+            <TextMessage key={ index } className={selfId===id? 'self' : 'sender'} msg={ msg } />
+        ))
+        ||
+            <i>Henüz mesaj yok</i>
+        }
+
         </div>
     )
 }
@@ -35,15 +34,27 @@ const Messages = ({ user, messages }) => {
 
 
 const useStyles = createUseStyles({
-    container:{
-        display: 'flex',
-        flexDirection: 'column',
+    container: {
         flex:1,
-    },
-    messagesContainer: {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        width: 280,
+
+        '& .sender': {
+            alignSelf: 'end',
+            borderRadius: [10,0,10,10],
+            backgroundColor: colors.receivedMessageBG,
+            marginBottom: 5,
+            maxWidth: '70%',
+        },
+        '& .self': {
+            alignSelf: 'start',
+            borderRadius: [0,10,10,10],
+            backgroundColor: colors.sentMessageBG,
+            marginBottom: 5,
+            maxWidth: '70%',
+        },
         
     },
 })

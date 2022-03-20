@@ -7,5 +7,7 @@ const colors = {
     red: '#eb3d34',
     green: '#3fab4b',
     greenellow: '#8feb34',
+    receivedMessageBG: '#45455f',
+    sentMessageBG: '#45554f',
 }
 export default colors

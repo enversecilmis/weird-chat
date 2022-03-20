@@ -35,7 +35,7 @@ const useStyles = createUseStyles({
         position: 'relative',
 
         '& input': {
-            border: 'none',
+        border: 'none',
             borderRadius: 11,
             padding: [0,30,4,10],
             
@@ -50,7 +50,8 @@ const useStyles = createUseStyles({
         '& .sendIcon': {
             fontSize: 22,
             position: 'absolute',
-            right: 5,
+            right: '0%',
+            top: '10%',
             transition: 'color 250ms linear',
             cursor: 'pointer',
         }

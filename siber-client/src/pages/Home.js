@@ -89,7 +89,7 @@ const Home = () => {
                 selectedUID &&
                 <>
                 <Messages
-                    user={ users[selectedUID] }
+                    selfId={ socket.id }
                     messages={ messagePacks[selectedUID] }
                 />
                 <TextInput
@@ -116,7 +116,6 @@ const useStyles = createUseStyles({
     container: {
         display: 'flex',
         justifyContent: 'space-between',
-
         height: '100%',
     },
 
