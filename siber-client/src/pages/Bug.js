@@ -1,12 +1,8 @@
 import React, { useState } from 'react'
-import { createUseStyles } from 'react-jss'
-
-
 
 
 
 const Bug = ({  }) => {
-    const classes = useStyles()
 
     const [obj, setObj] = useState({})
     const [text, setText] = useState('')
@@ -18,14 +14,14 @@ const Bug = ({  }) => {
             if(prev['helo'] === undefined)
                 prev['helo'] = []
 
-            console.log([...prev['helo']]);
-            prev['helo'].push(text)
-            console.log([...prev['helo']]);
+            const newOb = {...prev}
+            newOb['helo'] = [...newOb['helo'], text]
 
+            // prev['helo'].push(text)  } => causes bug, 
+            // return {...prev}         } => https://stackoverflow.com/questions/69834561/react-setstate-array-is-appending-the-same-item-twice-on-second-call-onward
 
-            return {...prev}
+            return newOb
         })
-        
         setText('')
     }
 
@@ -36,20 +32,11 @@ const Bug = ({  }) => {
                 value={text}
                 onChange={ (e) => setText(e.target.value) }
             />
+            
 
         </form>
     )
 }
-
-
-
-
-
-const useStyles = createUseStyles({
-    container:{
-
-    }
-})
 
 
 export default Bug

@@ -36,12 +36,11 @@ const Home = () => {
         })
 
         socket.on('message', ({ id, msg, isImg }) => {
-            console.log("received message");
             setMessagePacks(prev => {
-                if(prev[id] === undefined)
-                    prev[id] = []
-                prev[id].push({ id: id, msg: msg, isImg: isImg })
-                return {...prev}
+                prev[id] || (prev[id] = [])
+                const next = {...prev}
+                next[id] = [...next[id], { id: id, msg: msg, isImg: isImg }]
+                return next
             })
         })
 
@@ -69,11 +68,10 @@ const Home = () => {
         socket.emit('sendMessage', { id: selectedUID, msg: textMessage, isImg: false })
 
         setMessagePacks(prev => {
-            if(prev[selectedUID] === undefined)
-                prev[selectedUID] = []
-
-            prev[selectedUID].push({ id: socket.id, msg: textMessage, isImg: false })
-            return {...prev}
+            prev[selectedUID] || (prev[selectedUID] = [])
+            const next = {...prev}
+            next[selectedUID] = [...next[selectedUID], { id: socket.id, msg: textMessage, isImg: false }]
+            return next
         })
 
         setTextMessage('')
@@ -90,7 +88,6 @@ const Home = () => {
                 {
                 selectedUID &&
                 <>
-                {console.log(messagePacks[selectedUID])}
                 <Messages
                     user={ users[selectedUID] }
                     messages={ messagePacks[selectedUID] }

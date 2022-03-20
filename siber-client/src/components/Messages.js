@@ -11,7 +11,7 @@ const Messages = ({ user, messages }) => {
     return (
         <div className={classes.container}>
             <div className={classes.messagesContainer}>
-                {messages && messages.map(( { id, msg, isImg }, index ) => 
+                {(messages && messages.map(( { id, msg, isImg }, index ) => 
                     isImg?
                     <div key={index} className={classes.imgMessage}>
                         Image
@@ -20,7 +20,11 @@ const Messages = ({ user, messages }) => {
                     <div key={index} className={classes.textMessage}>
                         {msg}
                     </div>
-                )}
+                ))
+                ||
+                <i>Henüz mesaj yok</i>
+                
+                }
             </div>
         </div>
     )
