@@ -38,10 +38,9 @@ const Home = () => {
         socket.on('message', ({ id, msg, isImg }) => {
             console.log("received message");
             setMessagePacks(prev => {
-                console.log(prev[id]);
-                (prev[id] === undefined) && (prev[id] = [])
+                if(prev[id] === undefined)
+                    prev[id] = []
                 prev[id].push({ id: id, msg: msg, isImg: isImg })
-                console.log(prev[id]);
                 return {...prev}
             })
         })
@@ -64,16 +63,16 @@ const Home = () => {
 
     const sendTextMessage = (e) => {
         e.preventDefault()
-
-        console.log("Sending message");
-        textMessage &&
-            socket.emit('sendMessage', { id: selectedUID, msg: textMessage, isImg: false })
+        if(textMessage === '')
+            return
+            
+        socket.emit('sendMessage', { id: selectedUID, msg: textMessage, isImg: false })
 
         setMessagePacks(prev => {
-            console.log(prev[selectedUID]);
-            (prev[selectedUID] === undefined) && (prev[selectedUID] = [])
+            if(prev[selectedUID] === undefined)
+                prev[selectedUID] = []
+
             prev[selectedUID].push({ id: socket.id, msg: textMessage, isImg: false })
-            console.log(prev[selectedUID]);
             return {...prev}
         })
 
@@ -92,22 +91,16 @@ const Home = () => {
                 selectedUID &&
                 <>
                 {console.log(messagePacks[selectedUID])}
-                {/* <Messages
+                <Messages
                     user={ users[selectedUID] }
                     messages={ messagePacks[selectedUID] }
-                /> */}
-                {/* <TextInput
+                />
+                <TextInput
                     placeholder='Mesaj...'
                     text={textMessage}
                     setText={setTextMessage}
                     submit={sendTextMessage}
-                /> */}
-                <form onSubmit={sendTextMessage}>
-                    <input
-                    value={ textMessage }
-                    onChange={ (e) => setTextMessage(e.target.value) }
-                    />
-                </form>
+                />
                 </>
             }</div>
             
