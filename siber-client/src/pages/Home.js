@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import {  MdSend, MdPermMedia } from 'react-icons/md'
 import { useLocation } from 'react-router-dom'
 import { createUseStyles } from 'react-jss'
 
@@ -6,6 +7,7 @@ import useSocket from '../client'
 import UserList from '../components/UserList'
 import Messages from '../components/Messages'
 import TextInput from '../components/TextInput'
+import colors from '../utils/Colors'
 
 
 
@@ -80,6 +82,8 @@ const Home = () => {
     return (
         <div className={classes.container}>
             <UserList users={users} select={setSelectedUID} selected={selectedUID} />
+
+
             <div className={classes.messagesSection}>
                 <h1>Mesajlar</h1>
                 {
@@ -89,14 +93,26 @@ const Home = () => {
                     selfId={ socket.id }
                     messages={ messagePacks[selectedUID] }
                 />
-                <TextInput
-                    placeholder='Mesaj...'
-                    text={textMessage}
-                    setText={setTextMessage}
-                    submit={sendTextMessage}
-                />
+                <div style={{display: 'flex', alignItems: 'center'}}>
+                    
+                    <input id='selectImage' type="file" accept="image/*" style={{display: 'none'}} />
+                    <MdPermMedia
+                        className={classes.chooseImageButton}
+                        onClick={() => {
+                            document.querySelector('#selectImage').click()
+                        }}
+                    />
+                    <TextInput
+                        placeholder='Mesaj...'
+                        text={textMessage}
+                        setText={setTextMessage}
+                        submit={sendTextMessage}
+                    />
+                </div>
                 </>
             }</div>
+
+
             <div>
                 <h1 className={classes.name}>{ name }</h1>
 
@@ -133,6 +149,15 @@ const useStyles = createUseStyles({
     name: {
         fontSize: 40,
     },
+    chooseImageButton: {
+        fontSize: 21,
+        marginRight: 4,
+        cursor: 'pointer',
+
+        '&:hover': {
+            color: colors.greenellow
+        }
+    }
     
 })
 

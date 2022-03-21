@@ -1,6 +1,6 @@
 import React from 'react'
 import { createUseStyles } from 'react-jss'
-import {  MdSend } from 'react-icons/md'
+import {  MdSend, MdPermMedia } from 'react-icons/md'
 
 import colors from '../utils/Colors'
 
@@ -31,27 +31,30 @@ const TextInput = ({ text, setText, submit, placeholder }) => {
 
 const useStyles = createUseStyles({
     container:{
-        marginBottom: 20,
-        position: 'relative',
-
+        display: 'flex',
+        justifyContent: 'space-between',
+        width:'100%', // ********************************
+        
+        padding: [0,0,2,10],
+        borderRadius: 11,
+        backgroundColor: colors.light,
+        
         '& input': {
-        border: 'none',
-            borderRadius: 11,
-            padding: [0,30,4,10],
+            width:'100%', // ********************************
             
+            border: 'none',
+            background: 'transparent',
             fontSize: 18,
             color: colors.darklighter,
-
 
             '&:focus': {
                 outline:'none',
             }
         },
         '& .sendIcon': {
-            fontSize: 22,
-            position: 'absolute',
-            right: '1%',
-            top: '9%',
+            fontSize: 21,
+            marginTop:3,
+            marginRight:4,
             transition: 'color 250ms linear',
             cursor: 'pointer',
         }

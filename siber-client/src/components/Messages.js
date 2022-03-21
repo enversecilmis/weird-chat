@@ -13,8 +13,8 @@ const Messages = ({ selfId, messages }) => {
 
     return (
         <div className={classes.container}>
-
-        {(messages &&
+    {
+        (messages &&
         messages.map(( { id, msg, isImg }, index ) => 
             isImg?
             <ImageMessage key={ index } className={selfId===id? 'self' : 'sender'} msg={ msg } />
@@ -23,8 +23,7 @@ const Messages = ({ selfId, messages }) => {
         ))
         ||
             <i>Henüz mesaj yok</i>
-        }
-
+    }
         </div>
     )
 }
@@ -39,7 +38,7 @@ const useStyles = createUseStyles({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        width: 280,
+        width: 350,
 
         '& .sender': {
             alignSelf: 'start',
