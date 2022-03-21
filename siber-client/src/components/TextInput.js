@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { createUseStyles } from 'react-jss'
 import {  MdSend, MdPermMedia } from 'react-icons/md'
 
@@ -7,20 +7,41 @@ import colors from '../utils/Colors'
 
 
 
-const TextInput = ({ text, setText, submit, placeholder }) => {
+const TextInput = ({
+    onSubmit = function(text=''){},
+    placeholder='',
+    avoidEmptyText=true
+}) => {
     const classes = useStyles()
-
+    const [text, setText] = useState('')
 
     return (
-        <form onSubmit={submit} className={classes.container}>
+        <form
+            className={classes.container}
+            onSubmit={(e) => {
+                e.preventDefault()
+                if(avoidEmptyText && text === '')
+                    return
+                onSubmit(text)
+                setText('')
+            }}
+        >
             <input
                 value={ text }
                 onChange={ (e) => setText(e.target.value) }
                 placeholder={ placeholder }
             />
-            <MdSend onClick={submit} className='sendIcon' style={{
-                color: text? colors.green : colors.darklighterlighterlighter,
-            }}/>
+            <MdSend
+                className='sendIcon'
+                style={{ color: text? colors.green : colors.darklighterlighterlighter }}
+                onClick={() => {
+                    if(avoidEmptyText && text === '')
+                        return
+                    onSubmit(text)
+                    setText('')
+                }}
+            />
+
         </form>
     )
 }

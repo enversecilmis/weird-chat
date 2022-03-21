@@ -8,8 +8,6 @@ import colors from '../utils/Colors';
 
 const TextMessage = ({ msg, className }) => {
     const classes = useStyles()
-    console.log(classes);
-
 
     return (
         <div className={ classes.container + " " + className }>
@@ -24,7 +22,7 @@ const TextMessage = ({ msg, className }) => {
 
 const useStyles = createUseStyles({
     container:{
-        backgroundColor: colors.green,
+        backgroundColor: colors.sentMessageBG,
         borderRadius: 10,
         padding:5,
     },

@@ -17,9 +17,9 @@ const Messages = ({ selfId, messages }) => {
         (messages &&
         messages.map(( { id, msg, isImg }, index ) => 
             isImg?
-            <ImageMessage key={ index } className={selfId===id? 'self' : 'sender'} msg={ msg } />
+            <ImageMessage key={ index } className={selfId===id? 'sent' : 'received'} msg={ msg } />
             :
-            <TextMessage key={ index } className={selfId===id? 'self' : 'sender'} msg={ msg } />
+            <TextMessage key={ index } className={selfId===id? 'sent' : 'received'} msg={ msg } />
         ))
         ||
             <i>Henüz mesaj yok</i>
@@ -40,14 +40,14 @@ const useStyles = createUseStyles({
         alignItems: 'center',
         width: 350,
 
-        '& .sender': {
+        '& .received': {
             alignSelf: 'start',
             borderRadius: [0,10,10,10],
             backgroundColor: colors.receivedMessageBG,
             marginBottom: 5,
             maxWidth: '70%',
         },
-        '& .self': {
+        '& .sent': {
             alignSelf: 'end',
             borderRadius: [10,0,10,10],
             backgroundColor: colors.sentMessageBG,
