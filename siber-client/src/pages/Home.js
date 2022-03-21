@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import {  MdSend, MdPermMedia } from 'react-icons/md'
 import { useLocation } from 'react-router-dom'
 import { createUseStyles } from 'react-jss'
 
@@ -8,6 +7,7 @@ import UserList from '../components/UserList'
 import Messages from '../components/Messages'
 import TextInput from '../components/TextInput'
 import colors from '../utils/Colors'
+import ImageChooseButton from '../components/ImageChooseButton'
 
 
 
@@ -19,7 +19,6 @@ const Home = () => {
     const [users, setUsers] = useState({})
     const [selectedUID, setSelectedUID] = useState()
     const [messagePacks, setMessagePacks] = useState({})
-    const [textMessage, setTextMessage] = useState('')
 
 
     const { state } = useLocation()
@@ -46,26 +45,15 @@ const Home = () => {
             })
         })
 
-
-
         // const msgs = {
         //     asSasdzZXadg: [
         //         { id: "asSasdzZXadg", msg: "asdsad", isImage: false },
         //         { id: "FGsdfXCaaadf", msg: "base64:/asdimage", isImage: true },
-        //         { id: "asSasdzZXadg", msg: "asdsad", isImage: false },
         //     ],
-        //     ZxAsdQWEsv: [
-        //         { id: "ZxAsdQWEsv", msg: "asdsad", isImage: false },
-        //         { id: "ZxAsdQWEsv", msg: "base64:/asdimage", isImage: true },
-        //         { id: "FGsdfXCaaa", msg: "asdsad", isImage: false },
-        //     ]
         // }
     }, [socket, state])
 
-    const sendTextMessage = (e) => {
-        e.preventDefault()
-        if(textMessage === '')
-            return
+    const sendTextMessage = (textMessage) => {
             
         socket.emit('sendMessage', { id: selectedUID, msg: textMessage, isImg: false })
 
@@ -75,42 +63,25 @@ const Home = () => {
             next[selectedUID] = [...next[selectedUID], { id: socket.id, msg: textMessage, isImg: false }]
             return next
         })
-
-        setTextMessage('')
     }
     
     return (
         <div className={classes.container}>
+
             <UserList users={users} select={setSelectedUID} selected={selectedUID} />
 
 
-            <div className={classes.messagesSection}>
+            <div className={classes.messagesDiv}>
                 <h1>Mesajlar</h1>
-                {
-                selectedUID &&
+                {selectedUID &&
                 <>
-                <Messages
-                    selfId={ socket.id }
-                    messages={ messagePacks[selectedUID] }
-                />
-                <div style={{display: 'flex', alignItems: 'center'}}>
-                    
-                    <input id='selectImage' type="file" accept="image/*" style={{display: 'none'}} />
-                    <MdPermMedia
-                        className={classes.chooseImageButton}
-                        onClick={() => {
-                            document.querySelector('#selectImage').click()
-                        }}
-                    />
-                    <TextInput
-                        placeholder='Mesaj...'
-                        text={textMessage}
-                        setText={setTextMessage}
-                        submit={sendTextMessage}
-                    />
+                <Messages selfId={ socket.id } messages={ messagePacks[selectedUID] }/>
+                <div className={classes.inputDiv}>
+                    <ImageChooseButton onLoad={(img64) => console.log(img64)} />
+                    <TextInput  placeholder='Mesaj...' onSubmit={sendTextMessage} />
                 </div>
-                </>
-            }</div>
+                </>}
+            </div>
 
 
             <div>
@@ -136,7 +107,7 @@ const useStyles = createUseStyles({
         height: '100%',
     },
 
-    messagesSection: {
+    messagesDiv: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
@@ -157,7 +128,11 @@ const useStyles = createUseStyles({
         '&:hover': {
             color: colors.greenellow
         }
-    }
+    },
+    inputDiv: {
+        display: 'flex',
+        alignItems: 'center',
+    },
     
 })
 
