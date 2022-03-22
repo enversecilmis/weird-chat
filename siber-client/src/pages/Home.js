@@ -60,9 +60,8 @@ const Home = () => {
 
     return (
         <div className={classes.container}>
-
             <UserList users={users} select={setSelectedUID} selected={selectedUID} />
-            <img />
+
             <div className={classes.messagesDiv}>
                 <h1>Mesajlar</h1>
                 {selectedUID &&
@@ -72,13 +71,9 @@ const Home = () => {
                 </>}
             </div>
 
-
             <div>
                 <h1 className={classes.name}>{ name }</h1>
-
             </div>
-
-            
         </div>
     )
 }
