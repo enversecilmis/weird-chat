@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { createUseStyles } from 'react-jss'
-import {  MdSend, MdPermMedia } from 'react-icons/md'
+import {  MdSend, MdOutlineCancel } from 'react-icons/md'
 
 import colors from '../utils/Colors'
 import TextInput from './TextInput'
@@ -15,19 +15,32 @@ const GeneralInput = ({
     showImagePreview=true,
     onSubmit = function(text=''){},
     onImageLoad=(img64='')=>{},
+    onImageSubmit=(img64='')=>{},
 }) => {
     const classes = useStyles()
     const [imgSrc, setImgSrc] = useState('')
 
     return (
         <div className={classes.container}>
-            <img id={placeholder} src={imgSrc}
-                style={{
-                    display: imgSrc? 'block':'none',
-                    backgroundColor: 'red',
-                    maxWidth: 200,
-                    maxHeight: 200,
-                }} />
+            <div className={classes.imagePreview} style={{display: imgSrc? 'flex':'none',}}>
+                <img id={placeholder} src={imgSrc}
+                    style={{
+                        backgroundColor: 'red',
+                        maxWidth: 200,
+                        maxHeight: 200,
+                    }} />
+
+                <div className='previewButtonsDiv'>
+                    <MdSend className='sendButton' onClick={() => {
+                        onImageSubmit(imgSrc)
+                        setImgSrc('')
+                    }}/>
+                    <MdOutlineCancel className='cancelButton' onClick={() => {
+                        setImgSrc('')
+                    }}/>
+                    
+                </div>
+            </div>
                 
             <div className={classes.inputs}>
                 <ImageChooseButton onLoad={(img64) => {
@@ -54,6 +67,45 @@ const useStyles = createUseStyles({
     inputs: {
         display: 'flex',
         alignItems: 'center',
+    },
+    imagePreview: {
+        backgroundColor: colors.darklighter,
+        padding: 10,
+        borderRadius: 15,
+        justifyContent: 'space-around',
+        alignItems: 'center',
+
+        '& .previewButtonsDiv': {
+            display: 'flex',
+            flexDirection: 'column',
+        },
+
+        '& .sendButton': {
+            color: colors.green,
+            fontSize: 30,
+            borderRadius: '50%',
+            padding: 10,
+            cursor: 'pointer',
+            transition: 'background-color 250ms linear',
+            
+
+            '&:hover': {
+                backgroundColor: colors.darklighterlighter
+            }
+        },
+        '& .cancelButton': {
+            color: colors.red,
+            fontSize: 30,
+            borderRadius: '50%',
+            padding: 10,
+            cursor: 'pointer',
+            transition: 'background-color 250ms linear',
+
+            '&:hover': {
+                backgroundColor: colors.darklighterlighter
+            }
+        }
+
     }
 })
 

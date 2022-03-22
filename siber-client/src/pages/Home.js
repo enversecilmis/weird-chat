@@ -1,13 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { createUseStyles } from 'react-jss'
 
 import useSocket from '../client'
 import UserList from '../components/UserList'
 import Messages from '../components/Messages'
-import TextInput from '../components/TextInput'
 import colors from '../utils/Colors'
-import ImageChooseButton from '../components/ImageChooseButton'
 import GeneralInput from '../components/GeneralInput'
 
 
@@ -58,6 +56,12 @@ const Home = () => {
     }
 
 
+    const sendImage = (img64) => {
+        socket.emit('sendMessage', { id: selectedUID, msg: img64, isImg: true })
+        addToMessageHistory(selectedUID, img64, true, true)
+    }
+
+
     return (
         <div className={classes.container}>
             <UserList users={users} select={setSelectedUID} selected={selectedUID} />
@@ -67,7 +71,7 @@ const Home = () => {
                 {selectedUID &&
                 <>
                 <Messages selfId={ socket.id } messages={ messagePacks[selectedUID] }/>
-                <GeneralInput onSubmit={sendTextMessage} placeholder='Mmamamia' />
+                <GeneralInput onImageSubmit={sendImage} onSubmit={sendTextMessage} placeholder='Mesaj...' />
                 </>}
             </div>
 

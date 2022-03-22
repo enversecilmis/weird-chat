@@ -1,17 +1,17 @@
 import React from 'react'
 import { createUseStyles } from 'react-jss'
+import colors from '../utils/Colors'
 
 
 
 
 
-const ImageMessage = ({ msg }) => {
+const ImageMessage = ({ msg, className }) => {
     const classes = useStyles()
 
-
     return (
-        <div className={classes.container}>
-            { msg }
+        <div className={ classes.container + " " + className }>
+            <img src={msg} width={100} height={100} />
         </div>
     )
 }
@@ -22,7 +22,9 @@ const ImageMessage = ({ msg }) => {
 
 const useStyles = createUseStyles({
     container:{
-        
+        backgroundColor: colors.sentMessageBG,
+        borderRadius: 10,
+        padding:5,
     },
 })
 
