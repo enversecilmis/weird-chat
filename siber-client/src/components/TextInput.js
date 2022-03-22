@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { createUseStyles } from 'react-jss'
-import {  MdSend, MdPermMedia } from 'react-icons/md'
+import {  MdSend } from 'react-icons/md'
 
 import colors from '../utils/Colors'
 

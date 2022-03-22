@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { createUseStyles } from 'react-jss'
 
@@ -8,6 +8,7 @@ import Messages from '../components/Messages'
 import TextInput from '../components/TextInput'
 import colors from '../utils/Colors'
 import ImageChooseButton from '../components/ImageChooseButton'
+import GeneralInput from '../components/GeneralInput'
 
 
 
@@ -37,49 +38,37 @@ const Home = () => {
         })
 
         socket.on('message', ({ id, msg, isImg }) => {
-            setMessagePacks(prev => {
-                prev[id] || (prev[id] = [])
-                const next = {...prev}
-                next[id] = [...next[id], { id: id, msg: msg, isImg: isImg }]
-                return next
-            })
+            addToMessageHistory(id, msg, isImg, false)
         })
-
-        // const msgs = {
-        //     asSasdzZXadg: [
-        //         { id: "asSasdzZXadg", msg: "asdsad", isImage: false },
-        //         { id: "FGsdfXCaaadf", msg: "base64:/asdimage", isImage: true },
-        //     ],
-        // }
     }, [socket, state])
 
-    const sendTextMessage = (textMessage) => {
-            
-        socket.emit('sendMessage', { id: selectedUID, msg: textMessage, isImg: false })
 
+    const addToMessageHistory = (id, msg, isImg, isSent) => {
         setMessagePacks(prev => {
-            prev[selectedUID] || (prev[selectedUID] = [])
+            prev[id] || (prev[id] = [])
             const next = {...prev}
-            next[selectedUID] = [...next[selectedUID], { id: socket.id, msg: textMessage, isImg: false }]
+            next[id] = [...next[id], {id: isSent? socket.id : id, msg, isImg }]
             return next
         })
     }
-    
+
+    const sendTextMessage = (textMessage) => {
+        socket.emit('sendMessage', { id: selectedUID, msg: textMessage, isImg: false })
+        addToMessageHistory(selectedUID, textMessage, false, true)
+    }
+
+
     return (
         <div className={classes.container}>
 
             <UserList users={users} select={setSelectedUID} selected={selectedUID} />
-
-
+            <img />
             <div className={classes.messagesDiv}>
                 <h1>Mesajlar</h1>
                 {selectedUID &&
                 <>
                 <Messages selfId={ socket.id } messages={ messagePacks[selectedUID] }/>
-                <div className={classes.inputDiv}>
-                    <ImageChooseButton onLoad={(img64) => console.log(img64)} />
-                    <TextInput  placeholder='Mesaj...' onSubmit={sendTextMessage} />
-                </div>
+                <GeneralInput onSubmit={sendTextMessage} placeholder='Mmamamia' />
                 </>}
             </div>
 
@@ -96,6 +85,13 @@ const Home = () => {
 
 
 
+
+        // const msgs = {
+        //     asSasdzZXadg: [
+        //         { id: "asSasdzZXadg", msg: "asdsad", isImage: false },
+        //         { id: "FGsdfXCaaadf", msg: "base64:/asdimage", isImage: true },
+        //     ],
+        // }
 
 
 
@@ -129,10 +125,7 @@ const useStyles = createUseStyles({
             color: colors.greenellow
         }
     },
-    inputDiv: {
-        display: 'flex',
-        alignItems: 'center',
-    },
+    
     
 })
 
