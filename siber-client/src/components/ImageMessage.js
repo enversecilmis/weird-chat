@@ -11,7 +11,7 @@ const ImageMessage = ({ msg, className }) => {
 
     return (
         <div className={ classes.container + " " + className }>
-            <img src={msg} width={100} height={100} />
+            <img src={msg} width={150} height={150} />
         </div>
     )
 }
@@ -25,6 +25,9 @@ const useStyles = createUseStyles({
         backgroundColor: colors.sentMessageBG,
         borderRadius: 10,
         padding:5,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 })
 

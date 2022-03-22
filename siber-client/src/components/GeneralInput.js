@@ -28,7 +28,9 @@ const GeneralInput = ({
                         backgroundColor: 'red',
                         maxWidth: 200,
                         maxHeight: 200,
-                    }} />
+                    }}
+                    width={150} height={150}
+                    />
 
                 <div className='previewButtonsDiv'>
                     <MdSend className='sendButton' onClick={() => {
@@ -78,6 +80,8 @@ const useStyles = createUseStyles({
         '& .previewButtonsDiv': {
             display: 'flex',
             flexDirection: 'column',
+            justifyContent: 'space-between',
+            alignItems: 'center',
         },
 
         '& .sendButton': {

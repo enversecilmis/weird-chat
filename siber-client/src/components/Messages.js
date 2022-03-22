@@ -1,6 +1,6 @@
 import React from 'react'
-import { createUseStyles } from 'react-jss'
 import colors from '../utils/Colors'
+import { createUseStyles } from 'react-jss'
 import ImageMessage from './ImageMessage'
 import TextMessage from './TextMessage'
 
@@ -39,6 +39,8 @@ const useStyles = createUseStyles({
         flexDirection: 'column',
         alignItems: 'center',
         width: 350,
+        overflow: 'scroll',
+        scrollbarWidth: 'none',
 
         '& .received': {
             alignSelf: 'start',
