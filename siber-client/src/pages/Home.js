@@ -7,6 +7,7 @@ import UserList from '../components/UserList'
 import Messages from '../components/Messages'
 import colors from '../utils/Colors'
 import GeneralInput from '../components/GeneralInput'
+import SteganographyTools from '../components/SteganographyTools'
 
 
 
@@ -76,9 +77,9 @@ const Home = () => {
                 </>}
             </div>
 
-            <div>
-                <h1 className={classes.name}>Araçlar</h1>
-                
+            <div className={classes.toolsDiv}>
+                <h1>Araçlar</h1>
+                <SteganographyTools  />
             </div>
         </div>
     )
@@ -114,17 +115,16 @@ const useStyles = createUseStyles({
             fontSize: 40,
         },
     },
-    name: {
-        fontSize: 40,
-    },
-    chooseImageButton: {
-        fontSize: 21,
-        marginRight: 4,
-        cursor: 'pointer',
 
-        '&:hover': {
-            color: colors.greenellow
-        }
+
+    toolsDiv: {
+        display: 'flex',
+        flexDirection: 'column',
+        
+        '& h1': {
+            textAlign: 'center',
+            fontSize: 40,
+        },
     },
     
     

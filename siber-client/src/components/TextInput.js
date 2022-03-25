@@ -10,14 +10,15 @@ import colors from '../utils/Colors'
 const TextInput = ({
     onSubmit = function(text=''){},
     placeholder='',
-    avoidEmptyText=true
+    avoidEmptyText=true,
+    className
 }) => {
     const classes = useStyles()
     const [text, setText] = useState('')
 
     return (
         <form
-            className={classes.container}
+            className={classes.container + " " + className}
             onSubmit={(e) => {
                 e.preventDefault()
                 if(avoidEmptyText && text === '')

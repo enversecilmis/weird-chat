@@ -27,6 +27,7 @@ const GeneralInput = ({
     }, [imgSrc])
     
 
+    // Component did mount
     useEffect(() => {
         inputsDiv.current.addEventListener("dragenter",(e) => {
             e.stopPropagation()
@@ -58,10 +59,9 @@ const GeneralInput = ({
             e.stopPropagation()
             e.preventDefault()
             
-            // const reader = new FileReader()
-            // reader.onload = e => setImgSrc(e.target.result)
-            // reader.readAsDataURL(e.dataTransfer.files[0])
-            console.log(e);
+            const reader = new FileReader()
+            reader.onload = e => setImgSrc(e.target.result)
+            reader.readAsDataURL(e.dataTransfer.files[0])
         })
     }, [])
 
@@ -73,13 +73,7 @@ const GeneralInput = ({
                 
                 {imgSrc?
                 <>
-                <img id={placeholder} src={imgSrc}
-                style={{
-                    maxWidth: 200,
-                    maxHeight: 200,
-                }}
-                width={150} height={150}
-                />
+                <img src={imgSrc} width={150} height={150} />
 
                 <div className='previewButtonsDiv'>
                     <MdSend className='sendButton' onClick={() => {
