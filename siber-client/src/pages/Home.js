@@ -27,6 +27,7 @@ const Home = () => {
     useEffect(() => {
         const userName = state || 'Kullanıcı'
         setName( userName )
+        document.title = userName
 
         socket.emit( 'login', userName )
 
@@ -76,7 +77,8 @@ const Home = () => {
             </div>
 
             <div>
-                <h1 className={classes.name}>{ name }</h1>
+                <h1 className={classes.name}>Araçlar</h1>
+                
             </div>
         </div>
     )

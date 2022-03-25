@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { createUseStyles } from 'react-jss'
 import {  MdSend, MdOutlineCancel } from 'react-icons/md'
 
@@ -12,25 +12,74 @@ import ImageChooseButton from './ImageChooseButton'
 const GeneralInput = ({
     placeholder='',
     avoidEmptyText=true,
-    showImagePreview=true,
     onSubmit = function(text=''){},
     onImageLoad=(img64='')=>{},
     onImageSubmit=(img64='')=>{},
 }) => {
     const classes = useStyles()
     const [imgSrc, setImgSrc] = useState('')
+    const [isOpen, setIsOpen] = useState(false)
+    const inputsDiv = useRef()
+    const imagePreview = useRef()
+
+    useEffect(() => {
+        setIsOpen( (imgSrc && true) )
+    }, [imgSrc])
+    
+
+    useEffect(() => {
+        inputsDiv.current.addEventListener("dragenter",(e) => {
+            e.stopPropagation()
+            e.preventDefault()
+            setIsOpen(true)
+        }, false)
+        inputsDiv.current.addEventListener("dragover",(e) => {
+            e.stopPropagation()
+            e.preventDefault()
+        }, false)
+        inputsDiv.current.addEventListener("drop",(e) => {
+            e.stopPropagation()
+            e.preventDefault()
+            
+            const reader = new FileReader()
+            reader.onload = e => setImgSrc(e.target.result)
+            reader.readAsDataURL(e.dataTransfer.files[0])            
+        }, false)
+        imagePreview.current.addEventListener("dragenter",(e) => {
+            e.stopPropagation()
+            e.preventDefault()
+            setIsOpen(true)
+        }, false)
+        imagePreview.current.addEventListener("dragover",(e) => {
+            e.stopPropagation()
+            e.preventDefault()
+        }, false)
+        imagePreview.current.addEventListener('drop', (e) => {
+            e.stopPropagation()
+            e.preventDefault()
+            
+            // const reader = new FileReader()
+            // reader.onload = e => setImgSrc(e.target.result)
+            // reader.readAsDataURL(e.dataTransfer.files[0])
+            console.log(e);
+        })
+    }, [])
+
 
     return (
         <div className={classes.container}>
-            <div className={classes.imagePreview} style={{display: imgSrc? 'flex':'none',}}>
+            
+            <div ref={imagePreview} className={classes.imagePreview} style={{display: isOpen? 'flex':'none',}}>
+                
+                {imgSrc?
+                <>
                 <img id={placeholder} src={imgSrc}
-                    style={{
-                        backgroundColor: 'red',
-                        maxWidth: 200,
-                        maxHeight: 200,
-                    }}
-                    width={150} height={150}
-                    />
+                style={{
+                    maxWidth: 200,
+                    maxHeight: 200,
+                }}
+                width={150} height={150}
+                />
 
                 <div className='previewButtonsDiv'>
                     <MdSend className='sendButton' onClick={() => {
@@ -42,12 +91,15 @@ const GeneralInput = ({
                     }}/>
                     
                 </div>
+                </>:
+                <p>Drop Here</p>
+                }
             </div>
                 
-            <div className={classes.inputs}>
+            <div className={classes.inputs} ref={inputsDiv}>
                 <ImageChooseButton onLoad={(img64) => {
                     onImageLoad(img64)
-                    showImagePreview && setImgSrc(img64)
+                    setImgSrc(img64)
                 }} />
                 <TextInput
                     avoidEmptyText={avoidEmptyText}
