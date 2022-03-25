@@ -68,10 +68,7 @@ const useStyles = createUseStyles({
             background: 'transparent',
             fontSize: 18,
             color: colors.darklighter,
-
-            '&:focus': {
-                outline:'none',
-            }
+            outline:'none',
         },
         '& .sendIcon': {
             fontSize: 21,

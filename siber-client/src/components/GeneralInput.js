@@ -41,11 +41,19 @@ const GeneralInput = ({
         inputsDiv.current.addEventListener("drop",(e) => {
             e.stopPropagation()
             e.preventDefault()
+
+            const data = e.dataTransfer.getData("text/plain")
+            if(data){
+                setImgSrc(data)
+                return
+            }
+
             
             const reader = new FileReader()
             reader.onload = e => setImgSrc(e.target.result)
             reader.readAsDataURL(e.dataTransfer.files[0])            
         }, false)
+
         imagePreview.current.addEventListener("dragenter",(e) => {
             e.stopPropagation()
             e.preventDefault()
@@ -58,10 +66,26 @@ const GeneralInput = ({
         imagePreview.current.addEventListener('drop', (e) => {
             e.stopPropagation()
             e.preventDefault()
+
+            const data = e.dataTransfer.getData("text/plain")
+
+            if(data){
+                setImgSrc(data)
+                return
+            }
             
+
             const reader = new FileReader()
             reader.onload = e => setImgSrc(e.target.result)
             reader.readAsDataURL(e.dataTransfer.files[0])
+
+            
+        })
+        imagePreview.current.addEventListener('dragleave', (e) => {
+            e.stopPropagation()
+            e.preventDefault()
+
+            setIsOpen(false)
         })
     }, [])
 

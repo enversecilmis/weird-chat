@@ -120,7 +120,16 @@ const useStyles = createUseStyles({
     toolsDiv: {
         display: 'flex',
         flexDirection: 'column',
-        
+
+        padding: 20,
+        boxShadow:{
+            x:0,
+            y:0,
+            spread:10,
+            blur:10,
+            color: '#262626'
+        },
+
         '& h1': {
             textAlign: 'center',
             fontSize: 40,
