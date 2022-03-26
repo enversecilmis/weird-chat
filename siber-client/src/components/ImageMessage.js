@@ -17,8 +17,8 @@ const ImageMessage = ({ msg, className }) => {
     }, [])
 
     return (
-        <div ref={img} className={ classes.container + " " + className }>
-            <img src={msg} width={150} height={150} />
+        <div className={ classes.container + " " + className }>
+            <img ref={img} src={msg} width={150} height={150} />
         </div>
     )
 }

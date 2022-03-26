@@ -115,10 +115,12 @@ const GeneralInput = ({
             </div>
                 
             <div className={classes.inputs} ref={inputsDiv}>
-                <ImageChooseButton onLoad={(img64) => {
-                    onImageLoad(img64)
-                    setImgSrc(img64)
-                }} />
+                <ImageChooseButton
+                    onLoad={(img64) => {
+                        onImageLoad(img64)
+                        setImgSrc(img64)
+                    }}
+                />
                 <TextInput
                     avoidEmptyText={avoidEmptyText}
                     placeholder={placeholder}

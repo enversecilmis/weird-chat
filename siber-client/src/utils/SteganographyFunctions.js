@@ -1,0 +1,3 @@
+const encodeImage = (text, image) => {
+    
+}
