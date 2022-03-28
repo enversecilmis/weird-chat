@@ -5,6 +5,7 @@ import {  MdSend, MdOutlineCancel } from 'react-icons/md'
 import colors from '../utils/Colors'
 import TextInput from './TextInput'
 import ImageChooseButton from './ImageChooseButton'
+import { getImage } from '../utils/utils'
 
 
 
@@ -42,16 +43,10 @@ const GeneralInput = ({
             e.stopPropagation()
             e.preventDefault()
 
-            const data = e.dataTransfer.getData("text/plain")
-            if(data){
-                setImgSrc(data)
-                return
-            }
+            getImage(e, (img64) => {
+                setImgSrc(img64)
+            })
 
-            
-            const reader = new FileReader()
-            reader.onload = e => setImgSrc(e.target.result)
-            reader.readAsDataURL(e.dataTransfer.files[0])            
         }, false)
 
         imagePreview.current.addEventListener("dragenter",(e) => {
@@ -67,19 +62,9 @@ const GeneralInput = ({
             e.stopPropagation()
             e.preventDefault()
 
-            const data = e.dataTransfer.getData("text/plain")
-
-            if(data){
-                setImgSrc(data)
-                return
-            }
-            
-
-            const reader = new FileReader()
-            reader.onload = e => setImgSrc(e.target.result)
-            reader.readAsDataURL(e.dataTransfer.files[0])
-
-            
+            getImage(e, (img64) => {
+                setImgSrc(img64)
+            })            
         })
         imagePreview.current.addEventListener('dragleave', (e) => {
             e.stopPropagation()

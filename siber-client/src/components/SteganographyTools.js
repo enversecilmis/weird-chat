@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { MdDoubleArrow } from 'react-icons/md'
 import { createUseStyles } from 'react-jss'
 import colors from '../utils/Colors'
-import { getRGBA, setRGBA } from '../utils/utils'
+import { getImage, getRGBA, setRGBA } from '../utils/utils'
 
 
 
@@ -35,15 +35,7 @@ const SteganographyTools = ({  }) => {
             e.stopPropagation()
             e.preventDefault()
 
-            const data = e.dataTransfer.getData("text/plain")
-            if(data){
-                setEncImgSrc(data)
-                return
-            }
-
-            const reader = new FileReader()
-            reader.onload = e => setEncImgSrc(e.target.result)
-            reader.readAsDataURL(e.dataTransfer.files[0])
+            getImage(e, setEncImgSrc)
         })
 
         decImg.current.addEventListener("dragenter",(e) => {
@@ -58,16 +50,9 @@ const SteganographyTools = ({  }) => {
             e.stopPropagation()
             e.preventDefault()
 
-            const data = e.dataTransfer.getData("text/plain")
-            if(data){
-                setDecImgSrc(data)
-                return
-            }
-
-            const reader = new FileReader()
-            reader.onload = e => setDecImgSrc(e.target.result)
-            reader.readAsDataURL(e.dataTransfer.files[0])
+            getImage(e, setDecImgSrc )
         })
+
     }, [])
 
 
@@ -80,14 +65,22 @@ const SteganographyTools = ({  }) => {
         const imgData = context.getImageData(0,0,150,150)
 
 
-        for(let i=0; i<message.length; i++){
+
+        console.log("Encoding ***********");
+        for(let i=0; i<message.length+100; i++){
             let rgba = getRGBA(imgData, i,i)
-            rgba[3] = message.charCodeAt(i)
+            console.log(rgba);
+        }
+
+        
+        let rgba
+        for(let i=0; i<message.length; i++){
+            rgba = getRGBA(imgData, i,i)
+            rgba[0] = message.charCodeAt(i)
             setRGBA(context, imgData, i, i, rgba)
         }
         setRGBA(context, imgData, message.length+1,message.length+1, [1,2,3,4])
-        setEncdImgSrc(canvas.toDataURL('image/jpeg'))
-
+        setEncImgSrc(canvas.toDataURL('image/jpeg'))
 
 
         console.log("Encoded ***********");
@@ -110,18 +103,16 @@ const SteganographyTools = ({  }) => {
         const context = canvas.getContext('2d')
         context.drawImage(decImg.current,0,0,150,150)
         const imgData = context.getImageData(0,0,150,150)
+        let decmsg = ''
         
         console.log("Got The Encoded ***********");
         for(let i=0; i<message.length; i++){
             let rgba = getRGBA(imgData, i,i)
             console.log(rgba);
+            decmsg += String.fromCharCode(rgba[0])
         }
+        setDecdMessage( decmsg )
 
-        // let i = 0;
-        // while(true){
-            
-        //     i += 1;
-        // }
         canvas.remove()
     }
 
@@ -132,22 +123,19 @@ const SteganographyTools = ({  }) => {
             
             <div className={classes.encode} >
 
+                <input
+                    className='message'
+                    value={message}
+                    onChange={ e => setMessage(e.target.value) }
+                />
+                <MdDoubleArrow className='icon' onClick={encodeImage}/>
                 <img ref={encImg} src={encImgSrc} width={150} height={150} />
-                <div className='transform'>
-                    <MdDoubleArrow className='icon' onClick={encodeImage}/>
-                    <input
-                        className='message'
-                        value={message}
-                        onChange={ e => setMessage(e.target.value) }
-                    />
-                </div>
-                <img src={encdImgSrc} width={150} height={150} />
 
             </div>
 
             <h2>Veri Çıkart</h2>
             <div className={classes.decode} >
-                <img ref={decImg} src={decImgSrc}  />
+                <img ref={decImg} src={decImgSrc} width={150} height={150} />
                 <MdDoubleArrow className='icon' onClick={decodeImage}/>
                 <input className='message' readOnly value={decdMessage} />
 
@@ -156,7 +144,6 @@ const SteganographyTools = ({  }) => {
         </div>
     )
 }
-
 
 
 
@@ -175,25 +162,21 @@ const useStyles = createUseStyles({
         display: 'flex',
         alignItems: 'center',
 
-        '& .transform': {
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+        
+        '& .icon': {
+            fontSize: 40,
+            cursor: 'pointer',
+            transition: 'color 200ms linear',
 
-            '& .icon': {
-                fontSize: 40,
-                cursor: 'pointer',
-                transition: 'color 200ms linear',
-    
-                '&:hover': {
-                    color: colors.green,
-                },
-            },
-            '& .message': {
-                border: 'none',
-                outline: 'none',
+            '&:hover': {
+                color: colors.green,
             },
         },
+        '& .message': {
+            border: 'none',
+            outline: 'none',
+        },
+
 
     },
     decode: {
