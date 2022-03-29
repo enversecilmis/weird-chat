@@ -63,31 +63,34 @@ const SteganographyTools = ({  }) => {
         const context = canvas.getContext('2d')
         context.drawImage(encImg.current,0,0,150,150)
         const imgData = context.getImageData(0,0,150,150)
+        const buf8 = imgData.data
+        const data = new Uint32Array(buf8.buffer)
+        console.log(data);
 
 
-
-        console.log("Encoding ***********");
-        for(let i=0; i<message.length+100; i++){
-            let rgba = getRGBA(imgData, i,i)
-            console.log(rgba);
-        }
-
+        // data[y * canvas.width + x]
+        // console.log("Encoding ***********");
+        // for(let i=0; i<message.length; i++){
+        //     let rgba = getRGBA(imgData, i,i)
+        //     console.log(rgba);
+        // }
         
-        let rgba
+        
+        let r,g,b,a
         for(let i=0; i<message.length; i++){
-            rgba = getRGBA(imgData, i,i)
-            rgba[0] = message.charCodeAt(i)
-            setRGBA(context, imgData, i, i, rgba)
+            [r,g,b,a] = getRGBA(imgData, i,i)
+            r = message.charCodeAt(i)
+            data[i * canvas.width + i] = (a << 24) | (r << 16) | (g << 8) | b
         }
-        setRGBA(context, imgData, message.length+1,message.length+1, [1,2,3,4])
+        console.log(data);
         setEncImgSrc(canvas.toDataURL('image/jpeg'))
 
 
-        console.log("Encoded ***********");
-        for(let i=0; i<message.length; i++){
-            let rgba = getRGBA(imgData, i,i)
-            console.log(rgba);
-        }
+        // console.log("Encoded ***********");
+        // for(let i=0; i<message.length; i++){
+        //     let rgba = getRGBA(imgData, i,i)
+        //     console.log(rgba);
+        // }
         canvas.remove()
     }
 

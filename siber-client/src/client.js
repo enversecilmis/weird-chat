@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 
 let socket = null
 const useSocket = () => {
-    socket = socket || io('http://192.168.1.39:3003')
+    socket = socket || io('http://172.17.9.238:3003')
     return socket
 }
 

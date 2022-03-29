@@ -60,7 +60,7 @@ const resizeImage = (img, width, height) => {
     ctx.drawImage(img, 0, 0, width, height)
 
     
-    return canvas.toDataURL('image/jpg')
+    return canvas.toDataURL('image/jpeg')
 }
 
 
