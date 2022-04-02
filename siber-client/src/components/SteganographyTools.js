@@ -3,6 +3,7 @@ import { MdDoubleArrow } from 'react-icons/md'
 import { createUseStyles } from 'react-jss'
 import colors from '../utils/Colors'
 import { getImage, getRGBA, setRGBA } from '../utils/utils'
+import ImageChooseButton from './ImageChooseButton'
 
 
 
@@ -11,7 +12,6 @@ const SteganographyTools = ({  }) => {
     const classes = useStyles()
 
     const [encImgSrc, setEncImgSrc] = useState('')
-    const [encdImgSrc, setEncdImgSrc] = useState('')
     const [decImgSrc, setDecImgSrc] = useState('')
     const [decdMessage, setDecdMessage] = useState('')
     const [message, setMessage] = useState('')
@@ -31,11 +31,14 @@ const SteganographyTools = ({  }) => {
             e.stopPropagation()
             e.preventDefault()
         }, false)
-        encImg.current.addEventListener('drop', (e) => {
+        encImg.current.addEventListener('drop', async (e) => {
             e.stopPropagation()
             e.preventDefault()
 
-            getImage(e, setEncImgSrc)
+            const bitmap = await getImage(e)
+
+            const context = encImg.current.getContext('2d')
+            context.drawImage(bitmap,0,0,150,150)
         })
 
         decImg.current.addEventListener("dragenter",(e) => {
@@ -46,77 +49,63 @@ const SteganographyTools = ({  }) => {
             e.stopPropagation()
             e.preventDefault()
         }, false)
-        decImg.current.addEventListener('drop', (e) => {
+        decImg.current.addEventListener('drop', async (e) => {
             e.stopPropagation()
             e.preventDefault()
 
-            getImage(e, setDecImgSrc )
+            const bitmap = await getImage(e)
+
+            const context = decImg.current.getContext('2d')
+            context.drawImage(bitmap,0,0,150,150)
         })
 
     }, [])
 
 
     const encodeImage = () => {
-        const canvas = document.createElement('canvas')
-        canvas.width = 150
-        canvas.height = 150
-        const context = canvas.getContext('2d')
-        context.drawImage(encImg.current,0,0,150,150)
+
+        const context = encImg.current.getContext('2d')
         const imgData = context.getImageData(0,0,150,150)
-        const buf8 = imgData.data
-        const data = new Uint32Array(buf8.buffer)
-        console.log(data);
+        const data = imgData.data
 
+        // Frame Start
+        data[0] = 17
+        data[1] = 17
+        data[2] = 17
+        data[3] = 255
 
-        // data[y * canvas.width + x]
-        // console.log("Encoding ***********");
-        // for(let i=0; i<message.length; i++){
-        //     let rgba = getRGBA(imgData, i,i)
-        //     console.log(rgba);
-        // }
-        
-        
-        let r,g,b,a
+        let r,g,b
         for(let i=0; i<message.length; i++){
-            [r,g,b,a] = getRGBA(imgData, i,i)
+            [r,g,b] = getRGBA(imgData, i,i)
             r = message.charCodeAt(i)
-            data[i * canvas.width + i] = (a << 24) | (r << 16) | (g << 8) | b
+
+            const pos = i * (imgData.width * 4) + i * 4
+            data[pos] = r
+            data[pos+1] = g
+            data[pos+2] = b
+            data[pos+3] = 255
         }
-        console.log(data);
-        setEncImgSrc(canvas.toDataURL('image/jpeg'))
-
-
-        // console.log("Encoded ***********");
-        // for(let i=0; i<message.length; i++){
-        //     let rgba = getRGBA(imgData, i,i)
-        //     console.log(rgba);
-        // }
-        canvas.remove()
+        
+        // Frame End
+        data[0] = 17
+        data[1] = 17
+        data[2] = 17
+        data[3] = 255
+        context.putImageData(imgData, 0, 0)
     }
 
 
 
     const decodeImage = () => {
-        if(!decImg)
-            return
-
-        const canvas = document.createElement('canvas')
-        canvas.width = 150
-        canvas.height = 150
-        const context = canvas.getContext('2d')
-        context.drawImage(decImg.current,0,0,150,150)
+        const context = decImg.current.getContext('2d')
         const imgData = context.getImageData(0,0,150,150)
         let decmsg = ''
         
-        console.log("Got The Encoded ***********");
         for(let i=0; i<message.length; i++){
             let rgba = getRGBA(imgData, i,i)
-            console.log(rgba);
             decmsg += String.fromCharCode(rgba[0])
         }
         setDecdMessage( decmsg )
-
-        canvas.remove()
     }
 
 
@@ -125,23 +114,28 @@ const SteganographyTools = ({  }) => {
             <h2>Veri Gizle</h2>
             
             <div className={classes.encode} >
-
                 <input
                     className='message'
                     value={message}
                     onChange={ e => setMessage(e.target.value) }
                 />
                 <MdDoubleArrow className='icon' onClick={encodeImage}/>
-                <img ref={encImg} src={encImgSrc} width={150} height={150} />
-
+                <canvas ref={encImg} width={150} height={150} />
+                <ImageChooseButton onLoad={ bitmap => {
+                    const context = encImg.current.getContext('2d')
+                    context.drawImage(bitmap,0,0,150,150)
+                }} />
             </div>
 
             <h2>Veri Çıkart</h2>
             <div className={classes.decode} >
-                <img ref={decImg} src={decImgSrc} width={150} height={150} />
+                <ImageChooseButton onLoad={ bitmap => {
+                    const context = decImg.current.getContext('2d')
+                    context.drawImage(bitmap,0,0,150,150)
+                }} />
+                <canvas ref={decImg} width={150} height={150} />
                 <MdDoubleArrow className='icon' onClick={decodeImage}/>
                 <input className='message' readOnly value={decdMessage} />
-
             </div>
             
         </div>

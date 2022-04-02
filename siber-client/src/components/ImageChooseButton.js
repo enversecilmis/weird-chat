@@ -7,7 +7,7 @@ import { getImage } from '../utils/utils'
 
 
 
-const ImageChooseButton = ({ className, onLoad=(img64='')=>{} }) => {
+const ImageChooseButton = ({ className, onLoad=(bitmap)=>{} }) => {
     const classes = useStyles()
 
     const hiddenInput = useRef()
@@ -15,7 +15,10 @@ const ImageChooseButton = ({ className, onLoad=(img64='')=>{} }) => {
     return (
         <div className={classes.container}>
             <input ref={hiddenInput} type="file" accept="image/*" style={{display: 'none'}} 
-                onChange={(event) => getImage(event, onLoad ) }
+                onChange={ async (event) => {
+                    const bitmap = await getImage(event, onLoad )
+                    onLoad(bitmap)
+                }}
             />
             <MdPermMedia
                 className={classes.chooseImageButton + " " + className}

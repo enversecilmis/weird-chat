@@ -6,19 +6,31 @@ import colors from '../utils/Colors'
 
 
 
-const ImageMessage = ({ msg, className }) => {
+const ImageMessage = ({ bitmap, className }) => {
     const classes = useStyles()
-    const img = useRef()
+    const cnvs = useRef()
 
     useEffect(() => {
-        img.current.addEventListener('dragstart', (event) => {
-            event.dataTransfer.setData("text/plain", msg);
-        })
+
+        
+        const buf8 = new Uint8ClampedArray(bitmap)
+        const context = cnvs.current.getContext('2d')
+        const imgData = context.getImageData(0,0,150,150)
+        imgData.data.set(buf8)
+        context.putImageData(imgData,0,0)
+
+        // drag images as files
+        // cnvs.current.toBlob(blob => {
+        //     cnvs.current.addEventListener('dragstart', (event) => {
+
+        //     })
+        //     console.log(blob);
+        // })
     }, [])
 
     return (
         <div className={ classes.container + " " + className }>
-            <img ref={img} src={msg} width={150} height={150} />
+            <canvas ref={cnvs} width={150} height={150} />
         </div>
     )
 }

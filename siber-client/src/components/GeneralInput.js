@@ -14,18 +14,12 @@ const GeneralInput = ({
     placeholder='',
     avoidEmptyText=true,
     onSubmit = function(text=''){},
-    onImageLoad=(img64='')=>{},
-    onImageSubmit=(img64='')=>{},
+    onImageSubmit=(bitmap='')=>{},
 }) => {
     const classes = useStyles()
-    const [imgSrc, setImgSrc] = useState('')
     const [isOpen, setIsOpen] = useState(false)
     const inputsDiv = useRef()
     const imagePreview = useRef()
-
-    useEffect(() => {
-        setIsOpen( (imgSrc && true) )
-    }, [imgSrc])
     
 
     // Component did mount
@@ -39,71 +33,48 @@ const GeneralInput = ({
             e.stopPropagation()
             e.preventDefault()
         }, false)
-        inputsDiv.current.addEventListener("drop",(e) => {
+        inputsDiv.current.addEventListener("drop", async (e) => {
             e.stopPropagation()
             e.preventDefault()
 
-            getImage(e, (img64) => {
-                setImgSrc(img64)
-            })
+            const bitmap = await getImage(e)
 
-        }, false)
-
-        imagePreview.current.addEventListener("dragenter",(e) => {
-            e.stopPropagation()
-            e.preventDefault()
+            const context = imagePreview.current.getContext('2d')
+            context.drawImage(bitmap,0,0,150,150)
             setIsOpen(true)
-        }, false)
-        imagePreview.current.addEventListener("dragover",(e) => {
-            e.stopPropagation()
-            e.preventDefault()
-        }, false)
-        imagePreview.current.addEventListener('drop', (e) => {
-            e.stopPropagation()
-            e.preventDefault()
 
-            getImage(e, (img64) => {
-                setImgSrc(img64)
-            })            
-        })
-        imagePreview.current.addEventListener('dragleave', (e) => {
-            e.stopPropagation()
-            e.preventDefault()
+        }, false)
 
-            setIsOpen(false)
-        })
+        
     }, [])
 
 
     return (
         <div className={classes.container}>
             
-            <div ref={imagePreview} className={classes.imagePreview} style={{display: isOpen? 'flex':'none',}}>
+            <div className={classes.imagePreviewCont} style={{display: isOpen? 'flex':'none',}}>
                 
-                {imgSrc?
-                <>
-                <img src={imgSrc} width={150} height={150} />
+                <canvas ref={imagePreview}  width={150} height={150} />
 
                 <div className='previewButtonsDiv'>
                     <MdSend className='sendButton' onClick={() => {
-                        onImageSubmit(imgSrc)
-                        setImgSrc('')
+                        const data = imagePreview.current.getContext('2d').getImageData(0,0,150,150).data
+                        onImageSubmit(data)
+                        setIsOpen(false)
                     }}/>
                     <MdOutlineCancel className='cancelButton' onClick={() => {
-                        setImgSrc('')
+                        setIsOpen(false)
                     }}/>
                     
                 </div>
-                </>:
-                <p>Drop Here</p>
-                }
             </div>
                 
             <div className={classes.inputs} ref={inputsDiv}>
                 <ImageChooseButton
-                    onLoad={(img64) => {
-                        onImageLoad(img64)
-                        setImgSrc(img64)
+                    onLoad={(bitmap) => {
+                        const context = imagePreview.current.getContext('2d')
+                        context.drawImage(bitmap,0,0,150,150)
+                        setIsOpen(true)
                     }}
                 />
                 <TextInput
@@ -127,7 +98,7 @@ const useStyles = createUseStyles({
         display: 'flex',
         alignItems: 'center',
     },
-    imagePreview: {
+    imagePreviewCont: {
         backgroundColor: colors.darklighter,
         padding: 10,
         borderRadius: 15,

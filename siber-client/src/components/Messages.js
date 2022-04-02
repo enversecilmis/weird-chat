@@ -17,7 +17,7 @@ const Messages = ({ selfId, messages }) => {
         (messages &&
         messages.map(( { id, msg, isImg }, index ) => 
             isImg?
-            <ImageMessage key={ index } className={selfId===id? 'sent' : 'received'} msg={ msg } />
+            <ImageMessage key={ index } className={selfId===id? 'sent' : 'received'} bitmap={ msg } />
             :
             <TextMessage key={ index } className={selfId===id? 'sent' : 'received'} msg={ msg } />
         ))
