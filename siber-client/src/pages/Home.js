@@ -52,11 +52,7 @@ const Home = () => {
         })
     }
 
-    const sendTextMessage = (textMessage) => {
-        socket.emit('sendMessage', { id: selectedUID, msg: textMessage, isImg: false })
-        addToMessageHistory(selectedUID, textMessage, false, true)
-    }
-
+    
 
     const sendImage = (img64) => {
         socket.emit('sendMessage', { id: selectedUID, msg: img64, isImg: true })
@@ -73,14 +69,10 @@ const Home = () => {
                 {selectedUID &&
                 <>
                 <Messages selfId={ socket.id } messages={ messagePacks[selectedUID] }/>
-                <GeneralInput onImageSubmit={sendImage} onSubmit={sendTextMessage} placeholder='Mesaj...' />
+                <GeneralInput onImageSubmit={sendImage} placeholder='Mesaj...' />
                 </>}
             </div>
 
-            <div className={classes.toolsDiv}>
-                <h1>Araçlar</h1>
-                <SteganographyTools  />
-            </div>
         </div>
     )
 }
@@ -109,6 +101,8 @@ const useStyles = createUseStyles({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
+        flex: 1,
+        padding: 50,
 
         '& h1': {
             textAlign: 'center',

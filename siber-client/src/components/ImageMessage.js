@@ -1,6 +1,8 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { MdDoubleArrow } from 'react-icons/md'
 import { createUseStyles } from 'react-jss'
 import colors from '../utils/Colors'
+import { getRGBA } from '../utils/utils'
 
 
 
@@ -9,6 +11,27 @@ import colors from '../utils/Colors'
 const ImageMessage = ({ bitmap, className }) => {
     const classes = useStyles()
     const cnvs = useRef()
+    const [msg, setMsg] = useState('')
+
+    const decodeImage = () => {
+        const context = cnvs.current.getContext('2d')
+        const imgData = context.getImageData(0,0,150,150)
+        let decmsg = ''
+        
+        const fstart = getRGBA(imgData, 0,0)
+        // check start
+        if(fstart[0] === 17 && fstart[1] === 17 && fstart[2] === 17){
+            for(let i=1; i<100; i++){
+                let rgba = getRGBA(imgData, i,i)
+                // check end
+                if(rgba[0] === 17 && rgba[1] === 17 && rgba[2] === 17)
+                    break
+                else
+                    decmsg += String.fromCharCode(rgba[0])
+            }
+        }
+        setMsg( decmsg )
+    }
 
     useEffect(() => {
 
@@ -31,6 +54,8 @@ const ImageMessage = ({ bitmap, className }) => {
     return (
         <div className={ classes.container + " " + className }>
             <canvas ref={cnvs} width={150} height={150} />
+            <MdDoubleArrow className='icon' onClick={decodeImage}/>
+            <p>{msg}</p>
         </div>
     )
 }
