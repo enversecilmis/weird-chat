@@ -75,7 +75,7 @@ const SteganographyTools = ({  }) => {
         data[3] = 255
 
         let r,g,b
-        for(let i=0; i<message.length; i++){
+        for(let i=1; i<=message.length; i++){
             [r,g,b] = getRGBA(imgData, i,i)
             r = message.charCodeAt(i)
 
@@ -85,12 +85,13 @@ const SteganographyTools = ({  }) => {
             data[pos+2] = b
             data[pos+3] = 255
         }
-        
+
+        const pos = (message.length+1) * (imgData.width * 4) + (message.length+1) * 4
         // Frame End
-        data[0] = 17
-        data[1] = 17
-        data[2] = 17
-        data[3] = 255
+        data[pos] = 17
+        data[pos+1] = 17
+        data[pos+2] = 17
+        data[pos+3] = 255
         context.putImageData(imgData, 0, 0)
     }
 
@@ -101,10 +102,20 @@ const SteganographyTools = ({  }) => {
         const imgData = context.getImageData(0,0,150,150)
         let decmsg = ''
         
-        for(let i=0; i<message.length; i++){
-            let rgba = getRGBA(imgData, i,i)
-            decmsg += String.fromCharCode(rgba[0])
+        const fstart = getRGBA(imgData, 0,0)
+        console.log(fstart);
+        // check start
+        if(fstart[0] === 17 && fstart[1] === 17 && fstart[2] === 17){
+            for(let i=1; i<100; i++){
+                let rgba = getRGBA(imgData, i,i)
+                // check end
+                if(rgba[0] === 17 && rgba[1] === 17 && rgba[2] === 17)
+                    break
+                else
+                    decmsg += String.fromCharCode(rgba[0])
+            }
         }
+        console.log(decmsg);
         setDecdMessage( decmsg )
     }
 
