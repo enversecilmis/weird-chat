@@ -56,30 +56,38 @@ const GeneralInput = ({
         const imgData = context.getImageData(0, 0, 150, 150)
         const data = imgData.data
 
-        // Frame Start
-        data[0] = 17
-        data[1] = 17
-        data[2] = 17
-        data[3] = 255
 
-        let r, g, b
-        for (let i = 1; i <= text.length; i++) {
-            [r, g, b] = getRGBA(imgData, i, i)
-            r = text.charCodeAt(i)
+        const frame = [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
+        //header
+        let k = 0
+        for (let i = 0; i < 16; i++) {
+            if ((i + k + 1) % 4 == 0)
+                k++
 
-            const pos = i * (imgData.width * 4) + i * 4
-            data[pos] = r
-            data[pos + 1] = g
-            data[pos + 2] = b
-            data[pos + 3] = 255
+            frame[i] ?
+                data[k + i] = data[k + i] | 1 :
+                data[k + i] &= ~1
         }
 
-        const pos = (text.length + 1) * (imgData.width * 4) + (text.length + 1) * 4
-        // Frame End
-        data[pos] = 17
-        data[pos + 1] = 17
-        data[pos + 2] = 17
-        data[pos + 3] = 255
+
+        let ik = text.length * 16 + 16
+        k=0
+        for (let i = 16; i < ik; i++) {
+            if ((i + k + 1) % 4 == 0)
+                k++
+        }
+
+
+        // trailer
+        k = 0
+        for (let i = ik; i < ik + 16; i++) {
+            if ((i + k + 1) % 4 == 0)
+                k++
+
+            frame[i] ?
+                data[k + i] = data[k + i] | 1 :
+                data[k + i] &= ~1
+        }
         context.putImageData(imgData, 0, 0)
     }
 
@@ -113,7 +121,6 @@ const GeneralInput = ({
                     onLoad={(bitmap) => {
                         const context = imagePreview.current.getContext('2d')
                         context.drawImage(bitmap, 0, 0, 150, 150)
-                        console.log("icb ol", isOpen);
                         setIsOpen(true)
                     }}
                 />
