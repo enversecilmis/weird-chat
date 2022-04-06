@@ -49,48 +49,69 @@ const GeneralInput = ({
 
     }, [])
 
-
     const encodeImage = () => {
-
         const context = imagePreview.current.getContext('2d')
         const imgData = context.getImageData(0, 0, 150, 150)
         const data = imgData.data
-
+        if (text == '') {
+            return
+        }
 
         const frame = [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
         //header
-        let k = 0
+        let crntPos = 0
         for (let i = 0; i < 16; i++) {
-            if ((i + k + 1) % 4 == 0)
-                k++
+            if ((crntPos + 1) % 4 == 0)
+                crntPos++
+
 
             frame[i] ?
-                data[k + i] = data[k + i] | 1 :
-                data[k + i] &= ~1
+                data[crntPos] = data[crntPos] | 1 :
+                data[crntPos] &= ~1
+
+            crntPos++
         }
 
+        // data
+        for (let i = 0; i < text.length; i++) {
+            let bitString = text.charCodeAt(i).toString(2)
 
-        let ik = text.length * 16 + 16
-        k=0
-        for (let i = 16; i < ik; i++) {
-            if ((i + k + 1) % 4 == 0)
-                k++
+            // başını 0 doldurarak 16'ya tamamla
+            while (bitString.length < 16) {
+                bitString = "0" + bitString
+            }
+
+            for (let j = 0; j < 16; j++) {
+                if ((crntPos + 1) % 4 == 0)
+                    crntPos++
+
+                if (bitString.charAt(j) == "1") {
+                    console.log("true: ", bitString.charAt(j));
+                    data[crntPos] = data[crntPos] | 1
+                }
+                else {
+                    console.log("false: ", bitString.charAt(j));
+                    data[crntPos] &= ~1
+                }
+
+                crntPos++
+            }
         }
-
 
         // trailer
-        k = 0
-        for (let i = ik; i < ik + 16; i++) {
-            if ((i + k + 1) % 4 == 0)
-                k++
+        for (let i = 0; i < 16; i++) {
+            if ((crntPos + 1) % 4 == 0)
+                crntPos++
 
             frame[i] ?
-                data[k + i] = data[k + i] | 1 :
-                data[k + i] &= ~1
+                data[crntPos] = data[crntPos] | 1 :
+                data[crntPos] &= ~1
+
+            crntPos++
         }
+
         context.putImageData(imgData, 0, 0)
     }
-
 
     return (
         <div className={classes.container}>

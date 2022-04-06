@@ -16,20 +16,60 @@ const ImageMessage = ({ bitmap, className }) => {
     const decodeImage = () => {
         const context = cnvs.current.getContext('2d')
         const imgData = context.getImageData(0,0,150,150)
+        const data = imgData.data
+
+        const frame ='1010101010101010'
+        let crntPos = 0
         let decmsg = ''
-        
-        const fstart = getRGBA(imgData, 0,0)
-        // check start
-        if(fstart[0] === 17 && fstart[1] === 17 && fstart[2] === 17){
-            for(let i=1; i<100; i++){
-                let rgba = getRGBA(imgData, i,i)
-                // check end
-                if(rgba[0] === 17 && rgba[1] === 17 && rgba[2] === 17)
-                    break
-                else
-                    decmsg += String.fromCharCode(rgba[0])
-            }
+
+        // check start of frame
+        let fStart = ''
+        for(let i=0; i<16; i++){
+            if ((crntPos + 1) % 4 == 0)
+                crntPos++
+            
+            const bit = data[crntPos] & 1
+            fStart += bit
+            crntPos++
         }
+        if(fStart !== frame){
+            return
+        }
+        console.log();
+        console.log("===== frame start =========");
+        console.log(fStart);
+        console.log("===========================");
+        console.log();
+        
+        // extract data
+        while(crntPos < data.length){
+            let bits = ''
+
+            for(let i=0; i<16; i++){
+                if ((crntPos + 1) % 4 == 0)
+                    crntPos++
+                
+                const bit = data[crntPos] & 1
+                bits += bit
+                crntPos++
+            }
+            // check end of frame
+            if(bits === frame){
+                console.log();
+                console.log("===== frame end =========");
+                console.log(bits);
+                console.log("=========================");
+                break
+            }
+            console.log(bits);
+
+            let charCode = parseInt(bits,2)
+            let char = String.fromCharCode(charCode)
+            decmsg += char
+
+        }
+        
+
         setMsg( decmsg )
     }
 
