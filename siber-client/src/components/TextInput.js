@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { createUseStyles } from 'react-jss'
 import {  MdSend } from 'react-icons/md'
 
@@ -11,10 +11,15 @@ const TextInput = ({
     onSubmit = function(text=''){},
     placeholder='',
     avoidEmptyText=true,
-    className
+    className,
+    setParentText
 }) => {
     const classes = useStyles()
     const [text, setText] = useState('')
+
+    useEffect(() => {
+        setParentText(text)
+    }, [text])
 
     return (
         <form

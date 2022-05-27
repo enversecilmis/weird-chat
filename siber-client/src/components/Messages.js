@@ -38,7 +38,7 @@ const useStyles = createUseStyles({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        width: 350,
+        width: "100%",
         overflow: 'scroll',
         scrollbarWidth: 'none',
 

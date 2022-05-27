@@ -1,6 +1,8 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { MdDoubleArrow } from 'react-icons/md'
 import { createUseStyles } from 'react-jss'
 import colors from '../utils/Colors'
+import { getRGBA } from '../utils/utils'
 
 
 
@@ -9,6 +11,67 @@ import colors from '../utils/Colors'
 const ImageMessage = ({ bitmap, className }) => {
     const classes = useStyles()
     const cnvs = useRef()
+    const [msg, setMsg] = useState('')
+
+    const decodeImage = () => {
+        const context = cnvs.current.getContext('2d')
+        const imgData = context.getImageData(0,0,150,150)
+        const data = imgData.data
+
+        const frame ='1010101010101010'
+        let crntPos = 0
+        let decmsg = ''
+
+        // check start of frame
+        let fStart = ''
+        for(let i=0; i<16; i++){
+            if ((crntPos + 1) % 4 == 0)
+                crntPos++
+            
+            const bit = data[crntPos] & 1
+            fStart += bit
+            crntPos++
+        }
+        if(fStart !== frame){
+            return
+        }
+        console.log();
+        console.log("===== frame start =========");
+        console.log(fStart);
+        console.log("===========================");
+        console.log();
+        
+        // extract data
+        while(crntPos < data.length){
+            let bits = ''
+
+            for(let i=0; i<16; i++){
+                if ((crntPos + 1) % 4 == 0)
+                    crntPos++
+                
+                const bit = data[crntPos] & 1
+                bits += bit
+                crntPos++
+            }
+            // check end of frame
+            if(bits === frame){
+                console.log();
+                console.log("===== frame end =========");
+                console.log(bits);
+                console.log("=========================");
+                break
+            }
+            console.log(bits);
+
+            let charCode = parseInt(bits,2)
+            let char = String.fromCharCode(charCode)
+            decmsg += char
+
+        }
+        
+
+        setMsg( decmsg )
+    }
 
     useEffect(() => {
 
@@ -31,6 +94,8 @@ const ImageMessage = ({ bitmap, className }) => {
     return (
         <div className={ classes.container + " " + className }>
             <canvas ref={cnvs} width={150} height={150} />
+            <MdDoubleArrow className='icon' onClick={decodeImage}/>
+            <p>{msg}</p>
         </div>
     )
 }

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { MdPermMedia } from 'react-icons/md'
 import { createUseStyles } from 'react-jss'
 
@@ -12,12 +12,17 @@ const ImageChooseButton = ({ className, onLoad=(bitmap)=>{} }) => {
 
     const hiddenInput = useRef()
 
+    const [value, setValue] = useState("")
+
     return (
         <div className={classes.container}>
-            <input ref={hiddenInput} type="file" accept="image/*" style={{display: 'none'}} 
+            <input value={value} ref={hiddenInput} type="file" accept="image/*" style={{display: 'none'}} 
                 onChange={ async (event) => {
-                    const bitmap = await getImage(event, onLoad )
+                    const bitmap = await getImage(event)
+                    console.log("chhose btn");
+
                     onLoad(bitmap)
+                    setValue("")
                 }}
             />
             <MdPermMedia
